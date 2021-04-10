@@ -1,3 +1,12 @@
-Rails.application.routes.draw do
-  # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
+Rails.application.routes.draw 
+  concern :cancelable do |options|
+    resource :cancellation, options.merge(only: :create)
+  end
+
+  concern :confirmable do
+    post "confirm", on: :collection
+  end
+
+  resource :orders, concerns: :confirmable, except: %i[edit update destroy]
+    concerns :cancelable, module "oreder"
 end
